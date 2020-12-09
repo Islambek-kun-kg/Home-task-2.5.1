@@ -21,14 +21,12 @@ public class Downloaders extends Thread {
             System.out.println(this.getName() + " зашел в север");
             semaphore.acquire();
             System.out.println(this.getName() + " начал загрузку с сервера");
-            cld.countDown();
-            cld.await();
             for (int i = 0; i <= speed; i++) {
                 sleep(large / speed);
             }
-
             System.out.println(this.getName() + " закончил загрузку файла с сервера");
             semaphore.release();
+            cld.countDown();
         } catch (Exception e) {
         }
 

@@ -23,7 +23,6 @@ public class PassengerThread extends Thread {
             semaphore.release();
             System.out.println(this.getName() + " закончил регистрацию и сел в автобус");
             cdl.countDown();
-            cdl.await();
         } catch (Exception e) {
         }
     }

@@ -8,32 +8,30 @@ public class Main {
     public static final int counter = 10;
 
     public static void main(String[] args) {
-        CountDownLatch cdl = new CountDownLatch(counter);
+
+        CountDownLatch cdl = new CountDownLatch(1);
         Semaphore semaphore = new Semaphore(1);
-        new Uploader("Файл", semaphore).start();
+        new Uploader("Файл", semaphore, cdl).start();
         try {
-            Thread.currentThread().sleep(2000);
+            cdl.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        cdl.countDown();
-
+        CountDownLatch cld = new CountDownLatch(counter);
         Semaphore semaphore1 = new Semaphore(3);
         for (int i = 1; i <= counter; i++) {
             try {
                 Thread.currentThread().sleep(100);
-
+                cdl.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            new Downloaders("User " + i, cdl, semaphore1).start();
-            cdl.countDown();
+            new Downloaders("User " + i, cld, semaphore1).start();
         }
+
         try {
-            if (cdl.getCount() == 0) {
-                Thread.currentThread().sleep(3000);
-                System.out.println("По скольку достигунт лимит скачивания, файл удален с сервера!");
-            }
+            cld.await();
+            System.out.println("По скольку достигунт лимит скачивания, файл удален с сервера!");
         } catch (Exception e) {
         }
     }

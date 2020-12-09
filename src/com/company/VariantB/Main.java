@@ -15,7 +15,7 @@ public class Main {
             new PassengerThread("Passenger " + i, semaphore, cdl).start();
         }
         try {
-            Thread.currentThread().sleep((places / oc + 1) * 1000);
+            cdl.await();
             System.out.println("Автобус заполнился и поехал в Ош");
         } catch (Exception e) {
         }
